@@ -12,6 +12,18 @@
         .show {
             display: block !important;
         }
+
+        p {
+            font-size: 18px !important;
+        }
+
+        .nav-item {
+            font-size: 16px
+        }
+
+        h4 {
+            font-size: 20px
+        }
     </style>
     <div class="card">
         <div class="container-fliud">
@@ -81,83 +93,86 @@
             <div class="col-md-12 col-lg-10 col-xl-8">
                 <div class="card">
                     <div class="p-4 card-body">
-                        <h4 class="pb-2 mb-4 text-center">Nested comments section</h4>
-                        @forelse ($allcom as $com)
-                            <div class="row">
-                                <div class="col">
-                                    <div class="d-flex flex-start">
-                                        <img class="rounded-circle shadow-1-strong me-5 "
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp"
-                                            alt="avatar" width="65" height="65" />
-                                        <div class=" flex-grow-1 flex-shrink-1">
-                                            <div class="ms-4">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <p class="mb-1">
-                                                        {{ $com->name }} <span class="small">- 2 hours
-                                                            ago</span>
+                        <h4 class="pb-2 mb-4 text-center">Comments</h4>
+                        @if ($comment_product)
+                            @forelse ($comment_product as $com)
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="p-5 d-flex flex-start">
+                                            <img class="rounded-circle shadow-1-strong me-5 "
+                                                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp"
+                                                alt="avatar" width="65" height="65" />
+                                            <div class=" flex-grow-1 flex-shrink-1">
+                                                <div class="ms-4">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <p class="mb-1">
+                                                            @if ($com->user)
+                                                                {{ $com->user->name }} <span class="small">-
+                                                                    {{ $com->created_at->diffForHumans() }}
+                                                            @endif
+                                                            {{-- ago</span> --}}
+                                                        </p>
+
+                                                    </div>
+                                                    <p class="mb-0 small">
+                                                        {{ $com->comment }}
                                                     </p>
-                                                    <a href="#!"><i class="fas fa-reply fa-xs"></i><span
-                                                            class="small reply" data-comment-id="{{ $com->id }}">
-                                                            reply</span></a>
                                                 </div>
-                                                <p class="mb-0 small">
-                                                    {{ $com->comment }}
-                                                </p>
-                                            </div>
-                                            <div class="hiddensec d-none">
-                                                <form style="width: 36rem; margin:auto;"
-                                                    action="{{ route('reply', $com->id) }}" method="POST">
-                                                    @csrf
-                                                    @php
-                                                        $commentId = $com->id;
-                                                    @endphp
-                                                    {{-- <input type="hidden" name="" value="{{ $com->id }}"> --}}
-                                                    <div data-mdb-input-init class="mb-4 form-outline">
-                                                        <textarea class="form-control" id="form4Example3" name="reply" rows="4"></textarea>
-                                                        <label class="form-label" for="form4Example3">Reply</label>
-                                                    </div>
-                                                    <div class="mb-4 form-check d-flex justify-content-center">
-                                                        <label class="form-check-label" for="form4Example4">
-                                                            Type your reply here
-                                                        </label>
-                                                    </div>
-                                                    <button data-mdb-ripple-init type="submit"
-                                                        class="mb-4 btn btn-primary btn-block">Reply</button>
-                                                </form>
-                                            </div>
+                                                {{-- <div class="hiddensec d-none">
+                                           <form style="width: 36rem; margin:auto;"
+                                               action="{{ route('reply', $com->id) }}" method="POST">
+                                               @csrf
+                                               @php
+                                                   $commentId = $com->id;
+                                               @endphp
 
-                                            @forelse ($reply as $data)
-                                                <div class="mt-4 d-flex flex-start">
-                                                    <a class="me-3" href="#">
-                                                        <img class="rounded-circle shadow-1-strong"
-                                                            src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp"
-                                                            alt="avatar" width="65" height="65" />
-                                                    </a>
-                                                    <div class="flex-grow-1 flex-shrink-1">
-                                                        <div>
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-center">
-                                                                <p class="mb-1">
-                                                                    {{ $data->name }}<span class="small">- 3
-                                                                        hours
-                                                                        ago</span>
-                                                                </p>
-                                                            </div>
-                                                            <p class="mb-0 small">
-                                                                {{ $data->replay }};
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @empty
-                                            @endforelse
+                                               <div data-mdb-input-init class="mb-4 form-outline">
+                                                   <textarea class="form-control" id="form4Example3" name="reply" rows="4"></textarea>
+                                                   <label class="form-label" for="form4Example3">Reply</label>
+                                               </div>
+                                               <div class="mb-4 form-check d-flex justify-content-center">
+                                                   <label class="form-check-label" for="form4Example4">
+                                                       Type your reply here
+                                                   </label>
+                                               </div>
+                                               <button data-mdb-ripple-init type="submit"
+                                                   class="mb-4 btn btn-primary btn-block">Reply</button>
+                                           </form>
+                                       </div> --}}
 
+                                                {{-- @forelse ($reply as $data)
+                                           <div class="mt-4 d-flex flex-start">
+                                               <a class="me-3" href="#">
+                                                   <img class="rounded-circle shadow-1-strong"
+                                                       src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp"
+                                                       alt="avatar" width="65" height="65" />
+                                               </a>
+                                               <div class="flex-grow-1 flex-shrink-1">
+                                                   <div>
+                                                       <div
+                                                           class="d-flex justify-content-between align-items-center">
+                                                           <p class="mb-1">
+                                                               {{ $data->name }}<span class="small">- 3
+                                                                   hours
+                                                                   ago</span>
+                                                           </p>
+                                                       </div>
+                                                       <p class="mb-0 small">
+                                                           {{ $data->replay }};
+                                                       </p>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       @empty
+                                       @endforelse --}}
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @empty
-                        @endforelse
+                            @empty
+                            @endforelse
+                        @endif
 
                     </div>
                 </div>

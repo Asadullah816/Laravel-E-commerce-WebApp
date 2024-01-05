@@ -9,12 +9,16 @@ use PDO;
 class Comment extends Model
 {
     use HasFactory;
-    public function replies()
+    public function reply()
     {
         return $this->hasMany(Reply::class);
     }
-    public function product()
+    public function products()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

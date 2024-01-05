@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group">
                         <select name="category" class="form-select" aria-label="Default select example">
-                            <option selected>{{ $data->category }}</option>
+                            <option selected>{{ $data->category_id }}</option>
                             @foreach ($catData as $item)
                                 <option>{{ $item->category_name }}</option>
                             @endforeach

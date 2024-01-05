@@ -1,9 +1,9 @@
 <!-- partial:partials/_navbar.html -->
 
-<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+<nav class="flex-row p-0 navbar default-layout col-lg-12 col-12 fixed-top d-flex align-items-top">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
         <div class="me-3">
-            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+            <button class="navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
                 <span class="icon-menu"></span>
             </button>
         </div>
@@ -28,35 +28,35 @@
             <li class="nav-item dropdown d-none d-lg-block">
                 <a class="nav-link dropdown-bordered dropdown-toggle dropdown-toggle-split" id="messageDropdown"
                     href="#" data-bs-toggle="dropdown" aria-expanded="false"> Select Category </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
+                <div class="pb-0 dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                     aria-labelledby="messageDropdown">
-                    <a class="dropdown-item py-3">
-                        <p class="mb-0 font-weight-medium float-left">Select category</p>
+                    <a class="py-3 dropdown-item">
+                        <p class="float-left mb-0 font-weight-medium">Select category</p>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item">
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">Bootstrap Bundle </p>
-                            <p class="fw-light small-text mb-0">This is a Bundle featuring 16 unique dashboards</p>
+                            <p class="mb-0 fw-light small-text">This is a Bundle featuring 16 unique dashboards</p>
                         </div>
                     </a>
                     <a class="dropdown-item preview-item">
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">Angular Bundle</p>
-                            <p class="fw-light small-text mb-0">Everything you’ll ever need for your Angular
+                            <p class="mb-0 fw-light small-text">Everything you’ll ever need for your Angular
                                 projects</p>
                         </div>
                     </a>
                     <a class="dropdown-item preview-item">
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">VUE Bundle</p>
-                            <p class="fw-light small-text mb-0">Bundle of 6 Premium Vue Admin Dashboard</p>
+                            <p class="mb-0 fw-light small-text">Bundle of 6 Premium Vue Admin Dashboard</p>
                         </div>
                     </a>
                     <a class="dropdown-item preview-item">
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">React Bundle</p>
-                            <p class="fw-light small-text mb-0">Bundle of 8 Premium React Admin Dashboard</p>
+                            <p class="mb-0 fw-light small-text">Bundle of 8 Premium React Admin Dashboard</p>
                         </div>
                     </a>
                 </div>
@@ -70,7 +70,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <form class="search-form m-0" action="{{ route('adminsearch') }}" method="get">
+                <form class="m-0 search-form" action="{{ route('adminsearch') }}" method="get">
                     @csrf
                     <i class="icon-search"></i>
                     <input type="search" class="form-control" placeholder="Search Here" name="search"
@@ -82,37 +82,37 @@
                 <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                     <i class="icon-mail icon-lg"></i>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
+                <div class="pb-0 dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                     aria-labelledby="notificationDropdown">
-                    <a class="dropdown-item py-3 border-bottom">
-                        <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
-                        <span class="badge badge-pill badge-primary float-right">View all</span>
+                    <a class="py-3 dropdown-item border-bottom">
+                        <p class="float-left mb-0 font-weight-medium">You have 4 new notifications </p>
+                        <span class="float-right badge badge-pill badge-primary">View all</span>
                     </a>
-                    <a class="dropdown-item preview-item py-3">
+                    <a class="py-3 dropdown-item preview-item">
                         <div class="preview-thumbnail">
-                            <i class="mdi mdi-alert m-auto text-primary"></i>
+                            <i class="m-auto mdi mdi-alert text-primary"></i>
                         </div>
                         <div class="preview-item-content">
-                            <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
-                            <p class="fw-light small-text mb-0"> Just now </p>
+                            <h6 class="mb-1 preview-subject fw-normal text-dark">Application Error</h6>
+                            <p class="mb-0 fw-light small-text"> Just now </p>
                         </div>
                     </a>
-                    <a class="dropdown-item preview-item py-3">
+                    <a class="py-3 dropdown-item preview-item">
                         <div class="preview-thumbnail">
-                            <i class="mdi mdi-settings m-auto text-primary"></i>
+                            <i class="m-auto mdi mdi-settings text-primary"></i>
                         </div>
                         <div class="preview-item-content">
-                            <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
-                            <p class="fw-light small-text mb-0"> Private message </p>
+                            <h6 class="mb-1 preview-subject fw-normal text-dark">Settings</h6>
+                            <p class="mb-0 fw-light small-text"> Private message </p>
                         </div>
                     </a>
-                    <a class="dropdown-item preview-item py-3">
+                    <a class="py-3 dropdown-item preview-item">
                         <div class="preview-thumbnail">
-                            <i class="mdi mdi-airballoon m-auto text-primary"></i>
+                            <i class="m-auto mdi mdi-airballoon text-primary"></i>
                         </div>
                         <div class="preview-item-content">
-                            <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
-                            <p class="fw-light small-text mb-0"> 2 days ago </p>
+                            <h6 class="mb-1 preview-subject fw-normal text-dark">New user registration</h6>
+                            <p class="mb-0 fw-light small-text"> 2 days ago </p>
                         </div>
                     </a>
                 </div>
@@ -123,11 +123,11 @@
                     <i class="icon-bell"></i>
                     <span class="count"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
+                <div class="pb-0 dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                     aria-labelledby="countDropdown">
-                    <a class="dropdown-item py-3">
-                        <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
-                        <span class="badge badge-pill badge-primary float-right">View all</span>
+                    <a class="py-3 dropdown-item">
+                        <p class="float-left mb-0 font-weight-medium">You have 7 unread mails </p>
+                        <span class="float-right badge badge-pill badge-primary">View all</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item preview-item">
@@ -135,9 +135,9 @@
                             <img src="{{ asset('Admin/images/faces/face10.jpg') }}" alt="image"
                                 class="img-sm profile-pic">
                         </div>
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
-                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+                            <p class="mb-0 fw-light small-text"> The meeting is cancelled </p>
                         </div>
                     </a>
                     <a class="dropdown-item preview-item">
@@ -145,9 +145,9 @@
                             <img src="{{ asset('Admin/images/faces/face12.jpg') }}" alt="image"
                                 class="img-sm profile-pic">
                         </div>
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
-                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+                            <p class="mb-0 fw-light small-text"> The meeting is cancelled </p>
                         </div>
                     </a>
                     <a class="dropdown-item preview-item">
@@ -155,9 +155,9 @@
                             <img src="{{ asset('Admin/images/faces/face1.jpg') }}" alt="image"
                                 class="img-sm profile-pic">
                         </div>
-                        <div class="preview-item-content flex-grow py-2">
+                        <div class="flex-grow py-2 preview-item-content">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
-                            <p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+                            <p class="mb-0 fw-light small-text"> The meeting is cancelled </p>
                         </div>
                     </a>
                 </div>
@@ -168,11 +168,11 @@
                     <img class="img-xs rounded-circle" src="{{ asset('Admin/images/faces/face8.jpg') }}"
                         alt="Profile image"> </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-                    <div class="dropdown-header text-center">
+                    <div class="text-center dropdown-header">
                         <img class="img-md rounded-circle" src="{{ asset('Admin/images/faces/face8.jpg') }}"
                             alt="Profile image">
-                        <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
-                        <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                        <p class="mt-3 mb-1 font-weight-semibold">Allen Moreno</p>
+                        <p class="mb-0 fw-light text-muted">allenmoreno@gmail.com</p>
                     </div>
                     <a class="dropdown-item"><i
                             class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile
@@ -185,8 +185,18 @@
                         Activity</a>
                     <a class="dropdown-item"><i
                             class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-                    <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign
-                        Out</a>
+
+                    <div class="dropdown-item "><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>
+                        <form class="m-0 " action="{{ route('logout') }}" method="POST">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </div>
                 </div>
             </li>
         </ul>

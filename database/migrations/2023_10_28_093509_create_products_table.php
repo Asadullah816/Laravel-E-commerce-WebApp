@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('image');
-            $table->string('category');
             $table->string('quantity');
             $table->string('price');
             $table->string('discount_price')->nullable();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();
         });
     }

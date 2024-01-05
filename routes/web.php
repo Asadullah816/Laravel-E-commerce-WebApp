@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('cart', [HomeController::class, 'cartShow'])->name('cart');
     // Route::get('/', [HomeController::class, 'cartItems']);
     Route::get('deleteCart/{id}', [HomeController::class, 'deleteCart'])->name('deleteCart');
-    Route::get('order', [HomeController::class, 'order'])->name('order');
+    Route::get('order/{id}', [HomeController::class, 'order'])->name('order');
     Route::get('stripe/{total}', [HomeController::class, 'stripe'])->name('stripe');
     Route::get('sendemail/{id}', [AdminController::class, 'send_email'])->name('sendemail');
     Route::get('userorder', [HomeController::class, 'order_detail'])->name('userorders');
@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('cancelOrder/{id}', [HomeController::class, 'cancel_order'])->name('addtocartagain');
     Route::post('comment/{id}', [HomeController::class, 'comments'])->name('comment');
     Route::post('reply/{id}', [HomeController::class, 'reply'])->name('reply');
+    Route::post('stripe', [HomeController::class, 'stripePost'])->name('stripe.post');
     // ==========================================
     // ===============              =============
     // =============== ADMIN ROUTES =============
@@ -62,11 +63,12 @@ Route::middleware('auth')->group(function () {
         Route::get('updateproductdata/{id}', [AdminController::class, 'showUpdateData'])->name('updateProduct');
         Route::post('updateproduct/{id}', [AdminController::class, 'updateProduct']);
         // Route::get('stripe', 'stripe/{total}');
-        Route::post('stripe', [HomeController::class, 'stripePost'])->name('stripe.post');
+
         Route::get('orders', [AdminController::class, 'ShowOrders'])->name('orders');
         Route::get('deliverd/{id}', [AdminController::class, 'deliverd'])->name('deliverd');
         Route::get('download_pdf/{id}', [AdminController::class, 'download_pdf'])->name('download_pdf');
         Route::get('adminsearch', [AdminController::class, 'adminsearch'])->name('adminsearch');
+        Route::post('sendemailnotification', [AdminController::class, 'sending_email'])->name('sendnotification');
     });
 });
 require __DIR__ . '/auth.php';

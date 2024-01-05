@@ -32,33 +32,36 @@
                 $totalprice = 0;
                 $dis_price = 0;
             @endphp
-            @forelse ($cart as $cart)
+            @forelse ($allProducts as $data)
                 <tr class="table-row ">
                     <td class="tb-img">
                         <i class="fa-sharp fa-solid fa-xmark"></i>
-                        <img src="{{ asset('storage/' . $cart->image) }}" alt="">
-                        <p>{{ $cart->title }}</p>
-                        <p class="sm-price">${{ $cart->price }}</p>
+                        <img src="{{ asset('storage/' . $data['image']) }}" alt="">
+                        <p>{{ $data['title'] }}</p>
+                        <p class="sm-price">${{ $data['price'] }}</p>
                     </td>
                     <td class="price pe-5">
-                        <p>${{ $cart->discount_price ? $cart->discount_price : $cart->price }}</p>
+                        <p>${{ $data['discount_price'] ? $data['discount_price'] : $data['price'] }}</p>
                     </td>
 
                     <td class="total">
 
                         <div class="t-btn">
+                            <button class="update-btn"><a class="text-light"
+                                    href="{{ route('order', ['id' => $data['id']]) }}">Order
+                                    Now</a></button>
                             <button class="m-2 update-btn"><a class="text-light"
-                                    href="{{ route('deleteCart', ['id' => $cart->id]) }}">Delete
+                                    href="{{ route('deleteCart', ['id' => $data['id']]) }}">Delete
                                     Cart</a></button>
 
 
-                            @if ($cart->discount_price != null)
+                            @if ($data['discount_price'] != null)
                                 @php
-                                    $dis_price = $dis_price + $cart->discount_price;
+                                    $dis_price = $dis_price + $data['discount_price'];
                                 @endphp
                             @else
                                 @php
-                                    $totalprice = $totalprice + $cart->price;
+                                    $totalprice = $totalprice + $data['price'];
                                 @endphp
                             @endif
 
@@ -74,6 +77,7 @@
                 </tr>
 
             @empty
+                <h1>No Products is Added to The Cart</h1>
             @endforelse
         </tbody>
     </table>
@@ -84,10 +88,10 @@
                     Card</a></button>
         </div>
 
-        <div class="t-btn">
+        {{-- <div class="t-btn">
             <button class="update-btn"><a class="text-light" href="{{ route('order') }}">Order
                     Now</a></button>
-        </div>
+        </div> --}}
     </div>
 </div>
 <div class="container card-container">

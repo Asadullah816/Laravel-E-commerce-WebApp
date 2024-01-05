@@ -21,9 +21,6 @@
                                         Add To Cart
                                     </button>
                                 </form>
-                                <a href="" class="option2">
-                                    Buy Now
-                                </a>
                             </div>
                         </div>
                         <div class="img-box">

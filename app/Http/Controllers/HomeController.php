@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Stripe;
 use Illuminate\Support\Facades\Session;
 use App\Models\Cart;
+use App\Models\Cart_product;
 use App\Models\Comment;
 use App\Models\Reply;
 use App\Models\Product;
@@ -19,7 +20,12 @@ class HomeController extends Controller
 
     public function cartItem()
     {
-        return count(Cart::where('user_id', Auth::id())->get());
+        $user = Auth::user();
+        if ($user && $user->cart) {
+
+            return $cart = auth()->user()->cart->count();
+        }
+        return 0;
     }
     public function index(Request $req)
     {
@@ -35,90 +41,89 @@ class HomeController extends Controller
     }
     public function productDetail(Request $req)
     {
-        $productDetail = Product::find($req->id);
-        $product_id = $productDetail->id;
-
-        $allcom = Comment::where('product_id', $product_id)->get();
-        $allcom_id = $req->id;
-        if ($allcom_id) {
-            $reply = Reply::where('comment_id', $allcom_id)->get();
-            // dd($reply);
+        // $user = Auth::user();s
+        $users = User::all();
+        foreach ($users as $user) {
+            foreach ($user->products as $product) {
+                $productDetail = $product->find($req->id);
+                // dd($productDetail);
+                $comment_product = $productDetail->comments;
+            }
+            // $productDetail = $user->products->find($req->id);
         }
-
+        // dd($productDetail);
         $totalCart = $this->cartItem();
-        return view('home.productDetail', compact('productDetail', 'totalCart', 'allcom', 'reply'));
+        return view('home.productDetail', compact('productDetail', 'totalCart',  'comment_product'));
     }
 
     public function addToCart($id)
     {
-
         $user = Auth::user();
         $product = Product::find($id);
         $cart = new Cart;
-        $cart->name = $user->name;
-        $cart->user_id = $user->id;
-        $cart->user_email = $user->email;
-        $cart->product_id = $product->id;
-        $cart->title = $product->title;
-        $cart->image = $product->image;
-        $disPrice = $product->discount_price;
-        if ($disPrice == !null) {
-            $cart->price = $product->price;
-
-            $cart->discount_price = $disPrice;
-        } else {
-            $cart->price = $product->price;
-        }
-        $cart->save();
+        $user =  $user->cart()->save($cart);
+        $user->products()->attach($product->id);
+        $cartProduct = $user->cart;
         return back();
     }
 
-    public function cartShow()
+    public function cartShow(Request $req)
     {
-        $id = Auth::user()->id;
-        $cart = Cart::where('user_id', '=', $id)->get();
+        // $user = User::find(Auth::id());
+        $user = Auth::user();
+        // dd($user);
+        $cart = $user->cart;
+        $allProducts = [];
+        foreach ($cart as $cart) {
+            $products = $cart->products;
+            $allProducts = array_merge($allProducts, $products->toArray());
+            // dd($allProducts);
+        }
+        // dd($cart);
         $totalCart = $this->cartItem();
-
-        return view('home.cartItem', compact('cart', 'totalCart'));
+        // dd($allProducts);
+        return view('home.cartItem', compact('allProducts', 'totalCart'));
     }
 
-    public function deleteCart(Request $req)
+    public function deleteCart($id)
     {
-        $cart = Cart::find($req->id);
-        $cart->delete();
+        $user = User::find(Auth::id());
+        foreach ($user->cart as $cart) {
+            foreach ($cart->products as $product) {
+                $cart->products()->detach($id);
+                if ($cart->products()->count() === 0) {
+                    $cart->delete();
+                }
+            }
+        }
+        return back()->with('message', 'The Is removed successfully');
+        die;
+        // $product = Product::find($req->id);
+        // $cart = Cart::find($req->id);
+        $user->cart->products()->detach($id);
+        // $user->cart()->delete();
         return back()->with('message', 'The Is removed successfully');
     }
 
 
-    public function order(Request $req)
+    public function order($id)
     {
-        $user = Auth::user();
-        $userId = $user->id;
-        $cartData = Cart::where('user_id', $userId)->get();
-        // $product = Cart::find($req->id);
-        // dd($cartData);
-        foreach ($cartData as $Data) {
-            $order = new Order;
-            $order->name = $Data->name;
-            $order->user_id = $user->id;
-            $order->product_id = $Data->id;
-            $order->title = $Data->title;
-            $order->image = $Data->image;
-            $order->payment_status = 'Cash On Delivery';
-            $order->delivery = 'Processing';
-            $order->phone = $req->phone;
-            $order->email = $Data->user_email;
-            $disPrice = $Data->discount_price;
-            if ($disPrice == !null) {
-                $order->price = $Data->price;
-                $order->discount_price = $Data->discount_price;
-            } else {
-                $order->price = $Data->price;
+
+        $user_id = User::find(Auth::id());
+        $order = new Order;
+
+        $user = $user_id->orders()->save($order);
+        foreach ($user_id->cart as $cart) {
+            // dump($cart);
+            foreach ($cart->products as $product) {
+                $order->products()->attach($id);
+                $order->payment_status = "Cash On delievery";
+                $order->delievery = "processing";
+                $cart->products()->detach($id);
+                if ($cart->products()->count() === 0) {
+                    $cart->delete();
+                }
             }
-            $order->save();
-            $cart_id = $Data->id;
-            $cart = Cart::find($cart_id);
-            $cart->delete();
         }
         return back();
     }
@@ -130,48 +135,19 @@ class HomeController extends Controller
         $totalCart = $this->cartItem();
         return view('home.stripe', compact('total', 'totalCart'));
     }
-    public function stripePost(Request $request)
+    public function stripePost(Request $request, $total)
     {
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         Stripe\Charge::create([
-            "amount" => 100 * 100,
+            "amount" => $total * 100,
             "currency" => "usd",
             "source" => $request->stripeToken,
             "description" => "Test payment from itsolutionstuff.com."
         ]);
 
-        Session::flash('success', 'Payment successful!');
-        $user = Auth::user();
-        $userId = $user->id;
-        $cartData = Cart::where('user_id', $userId)->get();
-        // $product = Cart::find($req->id);
-        // dd($cartData);
-        foreach ($cartData as $Data) {
-            $order = new Order;
-            $order->name = $Data->name;
-            $order->user_id = $user->id;
-            $order->product_id = $Data->id;
-            $order->title = $Data->title;
-            $order->image = $Data->image;
-            $order->payment_status = 'Card payment';
-            $order->delivery = 'Processing';
-            $order->phone = $request->phone;
-            $order->phone = $user->email;
-            $disPrice = $Data->discount_price;
-            if ($disPrice == !null) {
-                $order->price = $Data->price;
 
-                $order->discount_price = $Data->discount_price;
-            } else {
-                $order->price = $Data->price;
-            }
-            $order->save();
-            $cart_id = $Data->id;
-            $cart = Cart::find($cart_id);
-            $cart->delete();
-        }
-        return back();
+        Session::flash('success', 'Payment successful!');
     }
     public function order_detail()
     {
@@ -194,14 +170,13 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $product = Product::find($req->id);
-        $comment = new Comment;
-        $comment->name = $user->name;
-        $comment->user_id = $user->id;
-        // dd($comment);
-        $comment->comment = $req->comment;
-        $comment->product_id = $product->id;
-        // dd($comment);
-        $comment->save();
+        // $product = $user->products()->find($req->id);
+
+        $comments = new Comment;
+        $comments->product_id = $product->id;
+        $comments->comment = $req->comment;
+        $comments = $user->comments()->save($comments);
+        // dd($comments);
         return back();
     }
     public function reply(Request $req, $commentId)
@@ -212,7 +187,7 @@ class HomeController extends Controller
         $reply->replay = $req->reply;
         $reply->comment_id = $commentId;
         $reply->user_id = Auth::user()->id;
-        dd($reply);
+        // dd($reply);
         $reply->save();
         return back();
     }

@@ -9,33 +9,49 @@ use App\Notifications\TestNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\PDF;
-use Illuminate\Notifications\Notification;
+// use Illuminate\Notifications\Notification;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 
 class AdminController extends Controller
 {
     public function admindata(Request $req)
     {
+        $user = Auth::user();
         $data = Product::all()->count();
-        $order = Order::where('delivery', 'Processing')->count();
-        $deliveredorder = Order::where('delivery', 'Delivered')->count();
-        $cancelorder = Order::where('delivery', 'Order Canceled')->count();
+        // dd($orders);
+        $ordersall = auth()->user()->orders()->count();
         $users = User::where('usertype', '0')->count();
-        $orders = Order::all();
-        $totalorders = Order::all()->count();
+        $orders = $user->orders()->with('products')->get();
         $revenueD = 0;
         $revenue = 0;
         $totalrevenue = 0;
-        foreach ($orders as $ord) {
-            if ($ord->discount_price == !null) {
-                $revenueD = $ord->discount_price + $revenueD;
-            } else {
-                $revenue = $ord->price + $revenue;
+        foreach ($orders as $order) {
+            foreach ($order->products as $ord) {
+                if ($ord->discount_price == !null) {
+                    $revenueD = $ord->discount_price + $revenueD;
+                } else {
+                    $revenue = $ord->price + $revenue;
+                }
+                $totalrevenue = $revenueD + $revenue;
             }
-            $totalrevenue = $revenueD + $revenue;
         }
-        return view('admin.adminHome', compact('data', 'order', 'users', 'totalrevenue', 'deliveredorder', 'totalorders', 'cancelorder'));
+        // if ($ordersall > 0) {
+        // $deliveredorder = Order::where('delivery', 'Delivered')->count();
+        // $order = Order::where('delivery', 'Processing')->count();
+        // $cancelorder = Order::where('delivery', 'Order Canceled')->count();
+        // $totalorders = Order::all()->count();
+
+        //
+        return view('admin.adminHome', compact('data',  'users',  'ordersall', 'totalrevenue'));
+        die;
+        // }
+
+
+
+        // return view('admin.adminHome', compact('users', 'data', 'ordersall'));
     }
     public function showCategory()
     {
@@ -68,6 +84,7 @@ class AdminController extends Controller
     }
     public function addnewProduct(Request $req)
     {
+        $user = Auth::user();
         $data = new Product;
         $req->validate([
             'title' => 'required',
@@ -79,13 +96,13 @@ class AdminController extends Controller
         ]);
         $data->title = $req->title;
         $data->description = $req->description;
-        $data->category = $req->category;
+        $data->category_id = $req->category;
         $data->quantity = $req->quantity;
         $data->price = $req->price;
         $data->discount_price = $req->discount_price;
         $data->image = $req->file('image')->store('images', 'public');
-        $data->save();
-
+        $user = $user->products()->save($data);
+        // dd($user);
         return redirect('dashboard/showProduct')->with('message', 'Product Uploaded Successfully');
     }
     public function showProduct()
@@ -95,8 +112,16 @@ class AdminController extends Controller
     }
     public function productDelete($id)
     {
-        $data = Product::find($id);
-        $data->delete();
+        $user = Auth::user();
+        $product = $user->products()->find($id);
+        // dd($product);
+        if ($product->carts) {
+            $product->carts()->detach();
+            $product->orders()->detach();
+        }
+
+        $product->delete();
+        // $data->delete();
         return back()->with('delete', 'The Product Delete SuccessFully');
     }
 
@@ -110,19 +135,21 @@ class AdminController extends Controller
 
     public function updateProduct(Request $req)
     {
-        $data = Product::find($req->id);
+        $user = Auth::user();
+
+        $data = $user->products()->find($req->id);
         // dd($data);
         $req->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'required',
+            // 'image' => 'required',
             'quantity' => 'required',
             'category' => 'required',
             'price' => 'required',
         ]);
         $data->title = $req->title;
         $data->description = $req->description;
-        $data->category = $req->category;
+        $data->category_id = $req->category;
         $data->quantity = $req->quantity;
         $data->price = $req->price;
         $data->discount_price = $req->discount_price;
@@ -132,16 +159,32 @@ class AdminController extends Controller
 
 
             $data->image = $req->file('image')->store('images', 'public');
+        } else {
+
+            $data->image = $data->image;
         }
-        $data->image = $req->file('image')->store('images', 'public');
         $data->save();
 
         return redirect('dashboard/showProduct')->with('message', 'Product Updated Successfully');
     }
     public function ShowOrders()
     {
-        $order = Order::all();
-        return view('admin.adminOrder', compact('order'));
+        $user = Auth::user();
+        $orders = $user->orders;
+        $allproducts = [];
+
+        foreach ($orders as $order) {
+            if ($order->products) {
+
+                foreach ($order->products as $products) {
+                    $name = $user->name;
+                    $allproducts[] = $products->toArray();
+                }
+            }
+        }
+
+
+        return view('admin.adminOrder', compact('allproducts', 'name'));
     }
     public function deliverd($id)
     {
@@ -159,12 +202,17 @@ class AdminController extends Controller
     }
     public function send_email($id)
     {
-        $order = Order::find($id);
-        return view('admin.adminSendemail', compact('order'));
+        $user = Auth::user();
+        $order = $user->orders->find($id);
+        // dd($order);
+        $email = $user->email;
+        return view('admin.adminSendemail', compact('order', 'email'));
     }
     // public function sending_email(Request $req)
     // {
-    //     $order = Order::find($req->id);
+    //     $user = Auth::user();
+    //     $order = $user->orders->find($req->id);
+
     //     $details = [
     //         'greeting' => $req->greeting,
     //         'subject' => $req->subject,
@@ -172,10 +220,7 @@ class AdminController extends Controller
     //         'url' => $req->url,
 
     //     ];
-
-    //     Notification::send($order, new TestNotification($details));
-
-
+    //     Notification::notify(new TestNotification($details));
     //     return back();
     // }
     public function adminsearch(Request $req)

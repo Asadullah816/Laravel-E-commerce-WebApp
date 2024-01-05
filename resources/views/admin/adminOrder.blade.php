@@ -32,32 +32,32 @@
                                 <th>Name</th>
                                 <th>Product Title</th>
                                 <th>Price</th>
-                                <th>Payment Status</th>
-                                <th>Delievery Status</th>
+                                {{-- <th>Payment Status</th>
+                                <th>Delievery Status</th> --}}
                                 <th>Image</th>
                                 <th>Operations</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($order as $data)
+                            @forelse ($allproducts as $data)
                                 <tr class="alert" role="alert">
 
 
                                     <td>
                                         <div class="email">
-                                            <span>{{ $data->name }}</span>
+                                            <span>{{ $name }}</span>
 
                                         </div>
                                     </td>
-                                    <td>{{ $data->title }}</td>
+                                    <td>{{ $data['title'] }}</td>
 
-                                    <td>${{ $data->discount_price ? $data->discount_price : $data->price }} </td>
-                                    <td>{{ $data->payment_status }} </td>
-                                    <td>{{ $data->delivery }} </td>
+                                    <td>${{ $data['discount_price'] ? $data['discount_price'] : $data['price'] }} </td>
+                                    {{-- <td>{{ $data['payment_status'] }} </td>
+                                    <td>{{ $data['delivery'] }} </td> --}}
                                     <td>
                                         <div class="img">
-                                            <img src="{{ asset('storage/' . $data->image) }}" alt="">
+                                            <img src="{{ asset('storage/' . $data['image']) }}" alt="">
                                         </div>
                                     </td>
                                     <td>
@@ -67,13 +67,13 @@
                                         </button>
                                         <div class="btn"> --}}
                                         <a class="text-success"
-                                            href="{{ route('deliverd', ['id' => $data->id]) }}">Deliverd<i
+                                            href="{{ route('deliverd', ['id' => $data['id']]) }}">Deliverd<i
                                                 class="fa-solid fa-pen-fancy"></i></a>
                                         <a class="text-danger"
-                                            href="{{ route('download_pdf', ['id' => $data->id]) }}">DownLoad<i
+                                            href="{{ route('download_pdf', ['id' => $data['id']]) }}">DownLoad<i
                                                 class=""></i></a>
-                                        <a class="text-primary" href="{{ route('sendemail', $data->id) }}">Send Email<i
-                                                class=""></i></a>
+                                        <a class="text-primary" href="{{ route('sendemail', $data['id']) }}">Send
+                                            Email<i class=""></i></a>
 
                 </div>
                 </td>

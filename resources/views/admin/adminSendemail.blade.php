@@ -6,10 +6,11 @@
         @include('admin.adminSidebar')
 
         @include('admin.adminNav')
-        <h1>Send Email to {{ $order->email }}</h1>
+        <h1>Send Email to {{ $email }}</h1>
         <div class="container mt-5">
             <h2 class="mb-4">Send Email</h2>
-            <form action="" method="POST">
+            <form action="{{ route('sendnotification') }}" method="POST">
+                @csrf
                 <div class="mb-3">
                     <label for="recipient" class="form-label">Email Greeting</label>
                     <input type="email" class="form-control" id="recipient" name="greeting" required>

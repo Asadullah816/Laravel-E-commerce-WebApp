@@ -31,7 +31,7 @@
                             </div>
                         @endif
                         {{-- {{ route('stripe.post') }} --}}
-                        <form role="form" action="{{ route('stripe.post') }}" method="post"
+                        <form role="form" action="{{ route('stripe.post') }}" method="POST"
                             class="require-validation" data-cc-on-file="false"
                             data-stripe-publishable-key="{{ env('STRIPE_KEY') }}" id="payment-form">
                             @csrf
